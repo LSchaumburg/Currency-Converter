@@ -29,30 +29,34 @@ class Details:
     # locations (allowed to use list or dict) used to store the trip details
     def add(self, country_name, start_date, end_date):
 
-        parts = date.split("/")
+        parts = start_date.split("/")
         if len(parts) == 3:
             if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2:
                 if parts[0].isdigit() == True and parts[1].isdigit() == True and parts[2].isdigit() == True:
-                    print("Valid input")
+                    pass
                 else:
-                    print("Invalid input")
+                    raise Error("Expected Error. Invalid date input")
             else:
-                print("Invalid input")
-                
-        if not start_date.isdigit.split("/"):
-            raise Error("Incorrect date format")
+                raise Error("Expected Error. Invalid date format")
 
-        if not end_date.isdigit.split("/"):
-            raise Error("Incorrect date format")
+        parts = end_date.split("/")
+        if len(parts) == 3:
+            if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2:
+                if parts[0].isdigit() == True and parts[1].isdigit() == True and parts[2].isdigit() == True:
+                    pass
+                else:
+                    raise Error("Expected Error. Invalid date input")
+            else:
+                raise Error("Expected Error. Invalid date format")
 
         # Error checking that the start date is before the end date
         if start_date >= end_date:
-            raise Error("Tried making the start date after the end date of travel. Expected Error.")
+            raise Error("Expected Error. Tried making the start date after the end date of travel.")
 
         # Error checking that the start date isn't already in the list
         for location in self.locations:
             if start_date in location[1]:
-                raise Error("Tried to add date that already existed. Expected Error.")
+                raise Error("Expected Error. Tried to add date that already existed.")
 
         self.locations.append((country_name, start_date, end_date))
         return self.locations
@@ -62,13 +66,20 @@ class Details:
     def current_country(self, date_string):
         self.date_string = date_string
 
-        if not datetime.datetime.strptime(date_string, "%Y/%m/%d"):
-            raise Error("Date has incorrect format")
+        parts = date_string.split("/")
+        if len(parts) == 3:
+            if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2:
+                if parts[0].isdigit() == True and parts[1].isdigit() == True and parts[2].isdigit() == True:
+                    pass
+                else:
+                    raise Error("Expected Error. Invalid date input")
+            else:
+                raise Error("Expected Error. Invalid date format")
 
         for location in self.locations:
             if location[1] <= date_string <= location[2]:
                 return location[0]
-        raise Error("No details about travel on that date")
+        raise Error("Expected Error. No details about travel on that date")
 
     def is_empty(self):
         if len(self.locations) == 0:
@@ -91,6 +102,19 @@ if __name__ == "__main__":
     details = Details()
     details.add("United States", "2015/09/01", "2015/09/17")
     details.add("Hong Kong", "2015/09/18", "2015/09/30")
+    # print(details.locations)
+
+    # date has incorrect format
+    try:
+        details.add("Australia", "12/06/2013", "24/06/2013")
+    except Error as error:
+        print(error)
+
+    # date has invalid input
+    try:
+        details.add("Australia", "asdv/12/15", "2014/12/25")
+    except Error as error:
+        print(error)
 
     # start date already used
     try:
@@ -104,29 +128,16 @@ if __name__ == "__main__":
     except Error as error:
         print(error)
 
-    # try:
-    #     details.add("Australia", "12/06/2013", "24/06/2013")
-    # except Error as error:
-    #     print(error)
-    #
-    # try:
-    #     details.add("Australia", "asdv/12/15", "2014/12/25")
-    # except Error as error:
-    #     print(error)
-
     # print(details.locations)
     # Checks is_empty
     try:
-        details.is_empty()
+        print("locations has data? Expected False:", details.is_empty())
     except Error as error:
-        print("locations has data" error)
+        print(error)
 
     details.locations = []
 
     try:
-        details.is_empty()
+        print("locations has data? Expected True:", details.is_empty())
     except Error as error:
         print(error)
-
-    # details.current_country("2015/09/22")
-    # print(details.current_country("2015/09/22"))
