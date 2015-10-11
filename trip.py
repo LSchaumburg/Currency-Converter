@@ -1,7 +1,5 @@
 __author__ = 'Luke Schaumburg'
 
-import datetime
-
 
 class Error(Exception):
     def __init__(self, value):
