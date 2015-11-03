@@ -1,0 +1,48 @@
+BoxLayout:
+    orientation: 'vertical'
+    Label:
+        id: current_location
+        text: app.current_country
+        size_hint_y: 0.25
+        background: (0, 0, 0, 1)
+        color: (1, 1, 1, 1)
+        font_size: 24
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.15
+        Spinner:
+            id: country_selector
+            text: 'Select Country'
+        TextInput:
+            id: current_currency_input
+            text: 'Current Currency Input'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.15
+        Label:
+            id: home_country
+            text: 'Home Country'
+        TextInput:
+            id: home_currency
+            text: 'Home Currency Input'
+            color: (1, 1, 1, 1)
+    Label:
+        id: current_date_field
+        # displays current date (year/month/day)
+        size_hint_y: 0.35
+        text: 'Today is:'
+        color: (1, 1, 1, 1)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.10
+        Label:
+            id: status_field
+            # status message of the app
+            text: 'Status Message'
+            color: (1, 1, 1, 1)
+        Button:
+            id: update_button
+            # updates the conversion rates the app is using
+            text: 'Update Conversion Rate'
+            on_press: app.handle_update_button()
+            color: (1, 1, 1, 1)
