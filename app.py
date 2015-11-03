@@ -7,14 +7,24 @@ __author__ = 'jc247746'
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.core.window import Window
-import trip
 
 
 class ConverterApp(App):
+    trip_file = open("config.txt", "r", encoding='utf-8')
+
+    line = trip_file.readline()
+    current_country = "Current trip location:\n" + line
+
     def build(self):
-            Window.size = (350, 700)
-            self.title = "Foreign Exchange Calculator"
-            self.root = Builder.load_file('converter_app_trial.kv')
-            return self.root
+        Window.size = (350, 700)
+        self.title = "Foreign Exchange Calculator"
+        self.root = Builder.load_file('converter_app_trial.kv')
+        return self.root
+
+    # def current_location(self):
+    #     self.root.ids.current_location.text = "current country goes here"
+
+    def handle_update_button(self):
+        self.root.ids.status_field.text = "Last updated " + "*the current time*"
 
 ConverterApp().run()
