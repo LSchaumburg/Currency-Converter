@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 from datetime import datetime
 import currency
+from currency import web_utility
 
 
 class ConverterApp(App):
@@ -33,6 +34,9 @@ class ConverterApp(App):
     # trip_details.keys() is for the country code
     # home_country is for home country_name
 
+    def __init__(self):
+        super().__init__()
+
     def build(self):
         trip_details = currency.get_all_details()
 
@@ -46,19 +50,43 @@ class ConverterApp(App):
     def handle_update_button(self):
         localtime = datetime.now().strftime("%H:%M:%S")
         self.root.ids.status_field.text = "Last updated: " + localtime
-        print("Updated")
+        print("Updated exchange rate")
 
-    # def handle_home_currency_input(self, currency_value, home_country_code, away_country_code):
-    #     currency.convert(currency_value, home_country_code, away_country_code)
-    #
+    def handle_home_currency_input(self):
+        # currency_value = currency_value.text
+        # value_as_string = currency_value
+        # currency.convert(currency_value, home_country_code, away_country_code)
+        self.root.ids.status_field.text = "AUD ($) to JPY ($)"  # "{}, ({}), to {}, ({})".format(home_country_code(part[1]), home_symbol(part[2]), away_country_code(part[1]), away_symbol(part[2]))
+        input_url = "https://www.google.com/finance/converter?a=10&from=AUD&to=JPY"  # .format("10", "JPY", "AUD")
+        converted_value = web_utility.load_page(input_url)
+        result_amount_start = converted_value.find("class=bld>")
+        result_amount_finish = converted_value.find("</span")
+        result_amount_location = converted_value[result_amount_start:result_amount_finish]
+        # print(result_amount_location)
+
+        result_amount = result_amount_location.split("class=bld>")
+        split_amount = result_amount[1]
+        final_value = split_amount.split(" ")
+        self.root.ids.current_currency_input.text = final_value[0]
+
     # def handle_away_currency_input(self, currency_value, home_country_code, away_country_code):
     #     currency.convert(currency_value, away_country_code, home_country_code)
-    #     # self.root.ids.status_field.text = away_country_code + "(" + away_symbol + ")"
+    #     self.root.ids.status_field.text = "{}, ({}), to {}, ({})".format(away_country_code, away_symbol, home_country_code, home_symbol)
+    #     self.root.ids.home_currency_input = converted_value
 
-    def change_country(self, trip_details):
-        self.root.ids.output_label.text = trip_details[country_code]
+    # def change_country(self, trip_details):
+    #     self.root.ids.output_label.text = trip_details[country_code]
+
 # for updating the app:
-# web_string [away_country_code] + [home_country_code] + [currency_value]
-# web_string [home_country_code] + [away_country_code] + [currency_value]
+# value_as_string = str(currency_value)
+
+# currency from home to away
+# input_url = ("https://www.google.com/finance/converter?a={}&from={}&to={}").format(value_as_string, home_country_code, away_country_code)
+
+# currency from away to home
+# input_url = ("https://www.google.com/finance/converter?a={}&from={}&to={}").format(value_as_string, away_country_code, home_country_code)
+
+# converted_value = web_utility.load_page(input_url)
+# return converted_value
 
 ConverterApp().run()
