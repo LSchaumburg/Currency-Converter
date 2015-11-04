@@ -22,10 +22,12 @@ BoxLayout:
             id: country_selector
             text: 'Select Country'
             size_hint_x: 0.5
-            on_text: app.change_country
+            on_text: app.change_country()
         TextInput:
             id: current_currency_input
             text: ''
+            # on_text_validate: app.handle_away_currency_input()
+            multiline: 'false'
             color: (0, 0, 0, 1)
             font_size: 48
         Label:
@@ -44,9 +46,11 @@ BoxLayout:
             size_hint_x: 0.5
         TextInput:
             id: home_currency_input
-            text: ''
+            text: '10'
+            on_text_validate: app.handle_home_currency_input()
+            multiline: 'false'
             color: (0, 0, 0, 1)
-            font_size: 48
+            font_size: 42
     Label:
         id: current_date_field
         # displays current date (year/month/day)
