@@ -1,48 +1,81 @@
 BoxLayout:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
     orientation: 'vertical'
     Label:
         id: current_location
-        text: app.current_country
+        text: app.current_location
         size_hint_y: 0.25
-        background: (0, 0, 0, 1)
-        color: (1, 1, 1, 1)
+        halign: 'center'
+        valign: 'middle'
+        color: (0, 0, 0, 1)
         font_size: 24
-    BoxLayout:
-        orientation: 'horizontal'
-        size_hint_y: 0.15
+    GridLayout:
+        rows: 2
+        cols: 2
+        size_hint_y: 0.25
         Spinner:
             id: country_selector
             text: 'Select Country'
+            size_hint_x: 0.5
+            on_text: app.change_country
         TextInput:
             id: current_currency_input
-            text: 'Current Currency Input'
-    BoxLayout:
-        orientation: 'horizontal'
-        size_hint_y: 0.15
+            text: ''
+            color: (0, 0, 0, 1)
+            font_size: 48
         Label:
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             id: home_country
-            text: 'Home Country'
+            text: app.home_country
+            font_size: 18
+            halign: 'center'
+            valign: 'middle'
+            color: (0, 0, 0, 1)
+            size_hint_x: 0.5
         TextInput:
-            id: home_currency
-            text: 'Home Currency Input'
-            color: (1, 1, 1, 1)
+            id: home_currency_input
+            text: ''
+            color: (0, 0, 0, 1)
+            font_size: 48
     Label:
         id: current_date_field
         # displays current date (year/month/day)
-        size_hint_y: 0.35
-        text: 'Today is:'
-        color: (1, 1, 1, 1)
+        size_hint_y: 0.40
+        text: app.current_date
+        font_size: 24
+        halign: 'center'
+        valign: 'middle'
+        color: (0, 0, 0, 1)
     BoxLayout:
         orientation: 'horizontal'
         size_hint_y: 0.10
         Label:
             id: status_field
             # status message of the app
+            # config file is loaded successfully
+            # config file could not be loaded (e.g. the file was not found)
+            # config file loaded but it contains invalid trip details
             text: 'Status Message'
+            canvas.before:
+                Color:
+                    rgba: 0.25, 0.25, 0.25, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             color: (1, 1, 1, 1)
         Button:
             id: update_button
             # updates the conversion rates the app is using
-            text: 'Update Conversion Rate'
+            text: 'Update Currency'
             on_press: app.handle_update_button()
             color: (1, 1, 1, 1)
