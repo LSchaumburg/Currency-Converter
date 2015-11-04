@@ -20,14 +20,16 @@ BoxLayout:
         size_hint_y: 0.25
         Spinner:
             id: country_selector
-            text: 'Select Country'
-            size_hint_x: 0.5
-            on_text: app.change_country()
+            text: ''
+            values: app.country_codes
+            size_hint_x: 0.75
+            on_text: app.change_country(self.text)
         TextInput:
             id: current_currency_input
             text: ''
-            # on_text_validate: app.handle_away_currency_input()
-            multiline: 'false'
+            on_text_validate: app.handle_away_currency_input()
+#            on_press: app.current_country
+            multiline: False
             color: (0, 0, 0, 1)
             font_size: 48
         Label:
@@ -43,12 +45,13 @@ BoxLayout:
             halign: 'center'
             valign: 'middle'
             color: (0, 0, 0, 1)
-            size_hint_x: 0.5
+            size_hint_x: 0.75
         TextInput:
             id: home_currency_input
-            text: '10'
+            text: ''
             on_text_validate: app.handle_home_currency_input()
-            multiline: 'false'
+#            on_press: app.change_country(self.text)
+            multiline: False
             color: (0, 0, 0, 1)
             font_size: 42
     Label:
@@ -69,7 +72,7 @@ BoxLayout:
             # config file is loaded successfully
             # config file could not be loaded (e.g. the file was not found)
             # config file loaded but it contains invalid trip details
-            text: 'Status Message'
+            text: 'Trip details accepted'
             canvas.before:
                 Color:
                     rgba: 0.25, 0.25, 0.25, 1
