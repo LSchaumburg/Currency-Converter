@@ -99,6 +99,28 @@ class ConverterApp(App):
             user_country = self.current_country
             self.root.ids.country_selector.text = user_country
             self.root.ids.home_currency_input.text = ""
+
+        self.cached_conversion_rate = {}
+        country_information = self.trip_details
+        selected_country = self.root.ids.country_selector.text
+
+        home_country_information = (country_information.get(self.root.ids.home_country.text.strip("\n")))
+        home_country_code = home_country_information[1]
+
+        away_country_information = country_information.get(selected_country)
+        away_country_code = (away_country_information[1])
+
+        for countries in self.saved_trips:
+            country_codes = country_information.get(countries)
+            stored_code = country_codes[1]
+            stored_rate = currency.convert(1, country_codes[1], home_country_code)
+            self.cached_conversion_rate[countries] = stored_rate
+            if stored_code == away_country_code:
+                pass
+            else:
+                stored_rate = currency.convert(1, country_codes[1], home_country_code)
+                self.cached_conversion_rate[countries] = stored_rate
+
         self.root.ids.status_field.text = "Last updated: " + localtime
         # self.handle_currency_input("away")
 
@@ -106,26 +128,28 @@ class ConverterApp(App):
         country_information = self.trip_details
         selected_country = self.root.ids.country_selector.text
 
-        away_country_information = country_information.get(selected_country)
-        away_country_code = (away_country_information[1])
-
         home_country_information = (country_information.get(self.root.ids.home_country.text.strip("\n")))
         home_country_code = home_country_information[1]
+
+        away_country_information = country_information.get(selected_country)
+        away_country_code = (away_country_information[1])
 
         if self.root.ids.away_currency_input.text == "":
             self.root.ids.home_currency_input.text = ""
 
         elif home_away == "away":
-            currency_value = self.root.ids.away_currency_input.text
+            currency_value = float(self.root.ids.away_currency_input.text)
 
-            converted_value = currency.convert(currency_value, away_country_code, home_country_code)
+            converted_value = self.cached_conversion_rate[away_country_information[0]] * currency_value
+            converted_value = "{0:.3f}".format(converted_value)
             self.root.ids.home_currency_input.text = str(converted_value)
             self.root.ids.status_field.text = away_country_code + " (" + away_country_information[2] + ") to " + home_country_code + " (" + home_country_information[2] + ")"
 
         elif home_away == "home":
-            currency_value = self.root.ids.home_currency_input.text
+            currency_value = float(self.root.ids.home_currency_input.text)
 
-            converted_value = currency.convert(currency_value, home_country_code, away_country_code)
+            converted_value = currency_value / self.cached_conversion_rate[away_country_information[0]]
+            converted_value = "{0:.3f}".format(converted_value)
             self.root.ids.away_currency_input.text = str(converted_value)
             self.root.ids.status_field.text = home_country_code + " (" + home_country_information[2] + ") to " + away_country_code + " (" + away_country_information[2] + ")"
 
