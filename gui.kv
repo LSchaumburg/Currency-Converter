@@ -5,9 +5,20 @@ BoxLayout:
         Rectangle:
             pos: self.pos
             size: self.size
+    canvas.after:
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
     orientation: 'vertical'
     Label:
         id: current_location
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, .95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
         text: app.current_location
         size_hint_y: 0.25
         halign: 'center'
@@ -18,12 +29,27 @@ BoxLayout:
         rows: 2
         cols: 2
         size_hint_y: 0.25
+        canvas.after:
+            Color:
+                rgba: 0.4, 0.4, 0.4, 1
+            Line:
+                rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
         Spinner:
+            canvas.after:
+                Color:
+                    rgba: 0.4, 0.4, 0.4, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             id: country_selector
             values: app.saved_trips
             size_hint_x: 0.75
             on_text: app.handle_currency_input("away")
         TextInput:
+            canvas.after:
+                Color:
+                    rgba: 0.4, 0.4, 0.4, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             id: away_currency_input
             text: ''
             on_text_validate: app.handle_currency_input("away")
@@ -31,9 +57,14 @@ BoxLayout:
             color: (0, 0, 0, 1)
             font_size: 48
         Label:
+            canvas.after:
+                Color:
+                    rgba: 0.4, 0.4, 0.4, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1
+                    rgba: 0, 0.75, 0.9, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -45,6 +76,11 @@ BoxLayout:
             color: (0, 0, 0, 1)
             size_hint_x: 0.75
         TextInput:
+            canvas.after:
+                Color:
+                    rgba: 0.4, 0.4, 0.4, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             id: home_currency_input
             text: ''
             on_text_validate: app.handle_currency_input("home")
@@ -54,6 +90,12 @@ BoxLayout:
     Label:
         id: current_date_field
         # displays current date (year/month/day)
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, .95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
         size_hint_y: 0.40
         text: app.current_date
         font_size: 24
@@ -76,10 +118,21 @@ BoxLayout:
                 Rectangle:
                     pos: self.pos
                     size: self.size
+            canvas.after:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             color: (1, 1, 1, 1)
         Button:
+            canvas.after:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 1
+                Line:
+                    rectangle: self.x + 1, self.y + 1, self.width - 1, self.height - 1
             id: update_button
             # updates the conversion rates the app is using
+            size_hint_x: 0.75
             text: 'Update Currency'
             on_press: app.handle_update_button()
             color: (1, 1, 1, 1)
