@@ -15,34 +15,32 @@ from trip import Error
 
 class ConverterApp(App):
     trip_file = open("config.txt", "r", encoding='utf-8')
-
     home_country = trip_file.readline().strip("\n")
-
+    trip_file.close()
 
     date_today = time.strftime("%Y/%m/%d")
     current_date = "Today is: \n" + date_today
 
     saved_trips = []
-
+    trip_file = open("config.txt", "r", encoding='utf-8')
+    next(trip_file)
     for line in trip_file:
-        parts = line.split(",")
-        country_name = parts[0]
-        saved_trips.append(country_name)
-        start_date = parts[1]
-        end_date = parts[2]
-        if start_date <= date_today <= end_date:
-            current_country = country_name
+        parts = line.strip("\n").split(",")
+        saved_trips.append(parts[0])
+    trip_file.close()
 
-    trip = Details()
+    trip_file = open("config.txt", "r", encoding='utf-8')
+    next(trip_file)
+    set_trips = Details()
     for line in trip_file:
-        sections = line.strip("\n").split(",")
-        print(sections)
+        parts = line.strip("\n").split(",")
         try:
-            trip.add(sections[0], sections[1], sections[2])
+            set_trips.add(parts[0], parts[1], parts[2])
         except Error as error:
             print(error.value)
 
-    current_location = "Current trip location:\n" + trip.current_country(date_today)
+    current_country = set_trips.current_country(date_today)
+    current_location = "Current trip location:\n" + current_country
 
     def __init__(self):
         super().__init__()
@@ -54,16 +52,15 @@ class ConverterApp(App):
         self.title = "Foreign Exchange Calculator"
         self.root = Builder.load_file('gui.kv')
         self.accepted_trip_details()
+        self.disable_app()
         return self.root
 
     def disable_app(self):
-        self.root.ids.status_field.disabled = True
         self.root.ids.home_currency_input.disabled = True
         self.root.ids.away_currency_input.disabled = True
         self.root.ids.country_selector.disabled = True
 
     def enable_app(self):
-        self.root.ids.status_field.disabled = False
         self.root.ids.home_currency_input.disabled = False
         self.root.ids.away_currency_input.disabled = False
         self.root.ids.country_selector.disabled = False
@@ -82,7 +79,7 @@ class ConverterApp(App):
                 parts = line.split(",")
                 if parts[0] in list_of_trips:
                     if len(parts[1]) == 10 and len(parts[2].strip("\n")) == 10:
-                        self.root.ids.status_field.text = "Valid country"
+                        self.root.ids.status_field.text = "Trip details accepted"
                     else:
                         self.root.ids.status_field.text = "Invalid trip details"
                         self.disable_app()
@@ -97,26 +94,13 @@ class ConverterApp(App):
     def handle_update_button(self):
         localtime = time.strftime("%H:%M:%S")
         self.enable_app()
+        # self.handle_currency_input()
+        if self.root.ids.country_selector.text == "":
+            user_country = self.current_country
+            self.root.ids.country_selector.text = user_country
+            self.root.ids.home_currency_input.text = ""
         self.root.ids.status_field.text = "Last updated: " + localtime
-        self.root.ids.country_selector.text = current_country
-        self.handle_currency_input("away")
-
-    # def change_country(self):
-        # print(self.root.ids.country_selector.text)
-        # country_information = self.trip_details
-        # selected_country = self.root.ids.country_selector.text
-        # away_country_code = (country_information.get(selected_country)[1])
-
-        # saved_trips = []
-        #
-        # trip_file = open("config.txt", 'r', encoding='utf-8')
-        # for line in trip_file:
-        #     parts = line.split(",")
-        #     country_name = parts[0]
-        #     saved_trips.append(country_name)
-        # self.root.ids.country_selector.text = saved_trips[0]
-        #
-        # trip_file.close()
+        # self.handle_currency_input("away")
 
     def handle_currency_input(self, home_away):
         country_information = self.trip_details
@@ -128,7 +112,10 @@ class ConverterApp(App):
         home_country_information = (country_information.get(self.root.ids.home_country.text.strip("\n")))
         home_country_code = home_country_information[1]
 
-        if home_away == "away":
+        if self.root.ids.away_currency_input.text == "":
+            self.root.ids.home_currency_input.text = ""
+
+        elif home_away == "away":
             currency_value = self.root.ids.away_currency_input.text
 
             converted_value = currency.convert(currency_value, away_country_code, home_country_code)
