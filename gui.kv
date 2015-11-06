@@ -54,8 +54,9 @@ BoxLayout:
             text: ''
             on_text_validate: app.handle_currency_input("away")
             multiline: False
+            valign: 'middle'
             color: (0, 0, 0, 1)
-            font_size: 48
+            font_size: 36
         Label:
             canvas.after:
                 Color:
@@ -71,7 +72,6 @@ BoxLayout:
             id: home_country
             text: app.home_country
             font_size: 18
-            halign: 'center'
             valign: 'middle'
             color: (0, 0, 0, 1)
             size_hint_x: 0.75
@@ -86,7 +86,7 @@ BoxLayout:
             on_text_validate: app.handle_currency_input("home")
             multiline: False
             color: (0, 0, 0, 1)
-            font_size: 42
+            font_size: 36
     Label:
         id: current_date_field
         # displays current date (year/month/day)
